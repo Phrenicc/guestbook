@@ -123,6 +123,20 @@
       font-size: 1em;
       font-family: 'hack-regular';
     }
+
+     .home-btn {
+      display: block;
+      margin: 20px auto;
+      background-color: pink;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      font-family: 'hack-regular';
+    }
+    
   </style>
 </head>
 <body>
@@ -273,5 +287,8 @@
     // Initial load
     loadComments();
   </script>
+
+  <button class="home-btn" id="home-btn" onclick="window.location.href='home.html';">Return to Home</button>
+  
 </body>
 </html>
