@@ -88,7 +88,8 @@
 
     let lineIndex = 0;
     let charIndex = 0;
-    let typingSpeed = 50;
+    let typingSpeed = 50; // Controls character typing speed
+    let hasCleared = false; // Tracks if the terminal has been cleared after the first message
 
     function type() {
       if (lineIndex < messages.length) {
@@ -98,19 +99,20 @@
           charIndex++;
           setTimeout(type, typingSpeed);
         } else {
-          if (lineIndex === 0) {
-            // Add slower ellipses for the first line
+          if (lineIndex === 0 && !hasCleared) {
+            // Add slower ellipses for the first message
             typeEllipses(() => {
-              typingArea.innerHTML += '<br>';
+              typingArea.innerHTML = ''; // Clear the terminal
+              hasCleared = true;
               charIndex = 0;
               lineIndex++;
-              setTimeout(type, 300);
+              setTimeout(type, 300); // Continue with the next message
             });
           } else {
             typingArea.innerHTML += '<br>';
             charIndex = 0;
             lineIndex++;
-            setTimeout(type, 300);
+            setTimeout(type, 300); // Continue typing
           }
         }
       } else {
@@ -129,7 +131,7 @@
           clearInterval(ellipsisInterval);
           if (callback) callback();
         }
-      }, 900); // 2 seconds between each dot
+      }, 900); // Speed for ellipses
     }
 
     function showText(text) {
