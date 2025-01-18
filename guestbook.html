@@ -210,7 +210,7 @@
       try {
        const response = await fetch(webAppUrl, {
   method: 'POST',
-  mode: 'cors', // Ensure CORS mode is correctly set
+  mode: 'no-cors', // Ensure CORS mode is correctly set
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify(data),
 });
