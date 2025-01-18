@@ -72,6 +72,7 @@
     <div class="buttons" id="button-area" style="display: none;">
       <button class="button" onclick="showText('You clicked the first button!')">About</button>
       <button class="button" onclick="window.location.href='guestbook.html'">Go to Guestbook</button>
+      <button class="button" onclick="exitTerminal()">Exit</button>
     </div>
   </div>
 
@@ -137,6 +138,13 @@
     function showText(text) {
       typingArea.innerHTML += `<br>${text}`;
       terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function exitTerminal() {
+      typingArea.innerHTML = 'Follow the beige cat...';
+      setTimeout(() => {
+        window.close(); // Close the tab after a delay
+      }, 2000);
     }
 
     type();
