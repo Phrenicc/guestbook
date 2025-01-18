@@ -208,12 +208,12 @@
       console.log('Submitting:', data); // Debugging: Log the data being sent
 
       try {
-        const response = await fetch(webAppUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-           mode: 'cors',
-        });
+       const response = await fetch(webAppUrl, {
+  method: 'POST',
+  mode: 'cors', // Ensure CORS mode is correctly set
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data),
+});
 
         const result = await response.json(); // Parse the response
         console.log('Response:', result); // Debugging: Log the response
