@@ -141,10 +141,23 @@
     }
 
     function exitTerminal() {
-      typingArea.innerHTML = 'Follow the beige cat...';
-      setTimeout(() => {
-        window.close(); // Close the tab after a delay
-      }, 2000);
+      typingArea.innerHTML = ''; // Clear the terminal
+      const exitMessage = 'Follow the beige cat...';
+      let index = 0;
+
+      function typeExitMessage() {
+        if (index < exitMessage.length) {
+          typingArea.innerHTML += exitMessage[index];
+          index++;
+          setTimeout(typeExitMessage, typingSpeed);
+        } else {
+          setTimeout(() => {
+            alert('You need to close this tab manually.');
+          }, 1000); // Show alert after the message is typed
+        }
+      }
+
+      typeExitMessage();
     }
 
     type();
