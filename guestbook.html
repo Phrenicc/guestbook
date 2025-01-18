@@ -216,10 +216,14 @@
   });
 
   console.log('Submitted successfully!'); // Log success without response
-  form.reset(); // Clear the form
-  selectedSpecies = ''; // Reset species selection
-  speciesButtons.forEach(btn => btn.style.opacity = '1'); // Reset buttons
-  loadComments(); // Reload comments
+  
+  // Reset the form and species selection
+  form.reset();
+  selectedSpecies = ''; 
+  speciesButtons.forEach(btn => btn.style.opacity = '1');
+
+  // Reload comments immediately after submitting
+  await loadComments(); // Ensure the comments refresh after submission
 } catch (error) {
   console.error('Error submitting comment:', error); // Debugging: Log the error
   alert('There was an error submitting your comment. Please try again.');
