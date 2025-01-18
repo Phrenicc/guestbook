@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jamie></title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      background: url('bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0px;
+    }
+
+    .image-container img {
+      max-width: 170px;
+      height: auto;
+    }
+
+    .terminal {
+      font-size: 1.1em; /* Increase terminal text size */
+      background-color: black;
+      color: pink;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .button {
+      font-size: 1.0em; /* Increase button text size */
+      background-color: pink;
+      color: black;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .button:hover {
+      background-color: darkred;
+      color: white;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="image-container">
+    <img src="fursona.png" alt="Fursona">
+  </div>
+  <div class="terminal" id="terminal">
+    <div id="typing-area"></div>
+    <div class="buttons" id="button-area" style="display: none;">
+      <button class="button" onclick="showText('You clicked the first button!')">About</button>
+      <button class="button" onclick="window.location.href='guestbook.html'">Go to Guestbook</button>
+    </div>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const typingArea = document.getElementById('typing-area');
+    const buttonArea = document.getElementById('button-area');
+
+    const messages = [
+      'The Catrix has you',
+      'You are now in user exec mode.',
+      'Select your options below!'
+    ];
+
+    let lineIndex = 0;
+    let charIndex = 0;
+    let typingSpeed = 50;
+
+    function type() {
+      if (lineIndex < messages.length) {
+        const currentLine = messages[lineIndex];
+        if (charIndex < currentLine.length) {
+          typingArea.innerHTML += currentLine[charIndex];
+          charIndex++;
+          setTimeout(type, typingSpeed);
+        } else {
+          if (lineIndex === 0) {
+            // Add slower ellipses for the first line
+            typeEllipses(() => {
+              typingArea.innerHTML += '<br>';
+              charIndex = 0;
+              lineIndex++;
+              setTimeout(type, 300);
+            });
+          } else {
+            typingArea.innerHTML += '<br>';
+            charIndex = 0;
+            lineIndex++;
+            setTimeout(type, 300);
+          }
+        }
+      } else {
+        typingArea.innerHTML += '<div class="cursor"></div>';
+        buttonArea.style.display = 'flex';
+      }
+    }
+
+    function typeEllipses(callback) {
+      let dots = 0;
+      const ellipsisInterval = setInterval(() => {
+        if (dots < 3) {
+          typingArea.innerHTML += '.';
+          dots++;
+        } else {
+          clearInterval(ellipsisInterval);
+          if (callback) callback();
+        }
+      }, 900); // 2 seconds between each dot
+    }
+
+    function showText(text) {
+      typingArea.innerHTML += `<br>${text}`;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    type();
+  </script>
+</body>
+</html>
