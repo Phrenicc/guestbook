@@ -107,13 +107,13 @@
               hasCleared = true;
               charIndex = 0;
               lineIndex++;
-              setTimeout(type, 300); // Continue with the next message
+              setTimeout(type, typingSpeed); // Continue with the next message
             });
           } else {
             typingArea.innerHTML += '<br>';
             charIndex = 0;
             lineIndex++;
-            setTimeout(type, 300); // Continue typing
+            setTimeout(type, typingSpeed); // Continue typing
           }
         }
       } else {
