@@ -177,6 +177,7 @@
 
     const webAppUrl = 'https://script.google.com/macros/s/AKfycbzuq2-dQZkdrPBqKBzdviofkP5DpTIldHDBJqgL5p03NSrXA3PSIZpLNx2Le-rXdxhR/exec';
 
+    // Species selection logic
     speciesButtons.forEach(button => {
       button.addEventListener('click', () => {
         selectedSpecies = button.dataset.species;
@@ -196,7 +197,22 @@
         return;
       }
 
-      const data = { name, species: selectedSpecies || '❓', comment: commentText };
+      // Cooldown logic
+      const lastSubmission = localStorage.getItem('lastSubmissionTime');
+      const now = Date.now();
+      const cooldown = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+      if (lastSubmission && now - lastSubmission < cooldown) {
+        const remainingTime = Math.ceil((cooldown - (now - lastSubmission)) / 1000);
+        alert(`You must wait ${Math.ceil(remainingTime / 60)} minutes before submitting another comment.`);
+        return;
+      }
+
+      const data = {
+        name,
+        species: selectedSpecies || '❓',
+        comment: commentText,
+      };
 
       try {
         await fetch(webAppUrl, {
@@ -210,6 +226,10 @@
         form.reset();
         selectedSpecies = '';
         speciesButtons.forEach(btn => btn.style.opacity = '1');
+
+        // Save the current timestamp in localStorage
+        localStorage.setItem('lastSubmissionTime', Date.now());
+
         await loadComments();
       } catch (error) {
         console.error('Error submitting comment:', error);
@@ -252,7 +272,9 @@
       if (timestamp.includes('/')) return timestamp;
       const date = new Date(timestamp);
       if (isNaN(date)) return 'Invalid Date';
-      return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}, ${date.toLocaleTimeString()} `;
+      return `${date.getDate().toString().padStart(2, '0')}/${
+        (date.getMonth() + 1).toString().padStart(2, '0')
+      }/${date.getFullYear()}, ${date.toLocaleTimeString()} `;
     }
 
     loadComments();
