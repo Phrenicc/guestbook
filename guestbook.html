@@ -124,7 +124,7 @@
       font-family: 'hack-regular';
     }
 
-     .home-btn {
+    .home-btn {
       display: block;
       margin: 20px auto;
       background-color: pink;
@@ -136,7 +136,6 @@
       font-size: 1em;
       font-family: 'hack-regular';
     }
-    
   </style>
 </head>
 <body>
@@ -176,20 +175,18 @@
     const speciesButtons = document.querySelectorAll('#species-buttons button');
     let selectedSpecies = '';
 
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzuq2-dQZkdrPBqKBzdviofkP5DpTIldHDBJqgL5p03NSrXA3PSIZpLNx2Le-rXdxhR/exec'; // Replace with your Web App URL
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbzuq2-dQZkdrPBqKBzdviofkP5DpTIldHDBJqgL5p03NSrXA3PSIZpLNx2Le-rXdxhR/exec';
 
-    // Species selection logic
     speciesButtons.forEach(button => {
       button.addEventListener('click', () => {
         selectedSpecies = button.dataset.species;
-        speciesButtons.forEach(btn => btn.style.opacity = '0.5'); // Dim others
-        button.style.opacity = '1'; // Highlight selected
+        speciesButtons.forEach(btn => btn.style.opacity = '0.5');
+        button.style.opacity = '1';
       });
     });
 
-    // Submit form to Google Sheets
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // Prevent page reload
+      e.preventDefault();
 
       const name = document.getElementById('name').value.trim();
       const commentText = document.getElementById('comment').value.trim();
@@ -199,47 +196,34 @@
         return;
       }
 
-      const data = {
-        name,
-        species: selectedSpecies || '❓', // Default to ❓ if no species selected
-        comment: commentText,
-      };
-
-      console.log('Submitting:', data); // Debugging: Log the data being sent
+      const data = { name, species: selectedSpecies || '❓', comment: commentText };
 
       try {
-  const response = await fetch(webAppUrl, {
-    method: 'POST',
-    mode: 'no-cors', // Ensure CORS mode is correctly set
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
+        await fetch(webAppUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
 
-  console.log('Submitted successfully!'); // Log success without response
-  
-  // Reset the form and species selection
-  form.reset();
-  selectedSpecies = ''; 
-  speciesButtons.forEach(btn => btn.style.opacity = '1');
+        console.log('Submitted successfully!');
+        form.reset();
+        selectedSpecies = '';
+        speciesButtons.forEach(btn => btn.style.opacity = '1');
+        await loadComments();
+      } catch (error) {
+        console.error('Error submitting comment:', error);
+        alert('There was an error submitting your comment. Please try again.');
+      }
+    });
 
-  // Reload comments immediately after submitting
-  await loadComments(); // Ensure the comments refresh after submission
-} catch (error) {
-  console.error('Error submitting comment:', error); // Debugging: Log the error
-  alert('There was an error submitting your comment. Please try again.');
-}
-
-    // Load comments from Google Sheets
     async function loadComments() {
       try {
         const response = await fetch(webAppUrl);
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
+        if (!response.ok) throw new Error('Network response was not ok');
         const comments = await response.json();
 
-        commentsSection.innerHTML = ''; // Clear existing comments
+        commentsSection.innerHTML = '';
         comments.forEach(({ timestamp, name, species, comment }) => {
           const commentEl = document.createElement('div');
           commentEl.classList.add('comment');
@@ -253,9 +237,7 @@
           commentEl.appendChild(textEl);
 
           const dateEl = document.createElement('small');
-          dateEl.textContent = timestamp
-            ? formatDate(timestamp)
-            : 'Invalid Date';
+          dateEl.textContent = timestamp ? formatDate(timestamp) : 'Invalid Date';
           commentEl.appendChild(dateEl);
 
           commentsSection.appendChild(commentEl);
@@ -266,29 +248,14 @@
       }
     }
 
-    // Helper function to format the timestamp
     function formatDate(timestamp) {
-      if (timestamp.includes('/')) {
-        // If already in DD/MM/YYYY format
-        return timestamp;
-      }
-
+      if (timestamp.includes('/')) return timestamp;
       const date = new Date(timestamp);
-      if (isNaN(date)) {
-        return 'Invalid Date';
-      }
-
-      // Return as DD/MM/YYYY HH:MM:SS
-      return `${date.getDate().toString().padStart(2, '0')}/${
-        (date.getMonth() + 1).toString().padStart(2, '0')
-      }/${date.getFullYear()}, ${date.toLocaleTimeString()} `;
+      if (isNaN(date)) return 'Invalid Date';
+      return `${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}, ${date.toLocaleTimeString()} `;
     }
 
-    // Initial load
     loadComments();
   </script>
-
-  
-  
 </body>
 </html>
